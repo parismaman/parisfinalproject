@@ -32,6 +32,8 @@ from wtforms import Form, BooleanField, StringField, PasswordField, validators
 from wtforms import TextField, TextAreaField, SubmitField, SelectField, DateField
 from wtforms import ValidationError
 
+from parisfinalproject.Models.QueryFormStructure import UserRegistrationFormStructure
+from parisfinalproject.Models.QueryFormStructure import LoginFormStructure
 
 from parisfinalproject.Models.QueryFormStructure import QueryFormStructure 
 from parisfinalproject.Models.QueryFormStructure import LoginFormStructure 
@@ -39,10 +41,13 @@ from parisfinalproject.Models.QueryFormStructure import UserRegistrationFormStru
 from parisfinalproject.Models.QueryFormStructure import ExpandForm
 from parisfinalproject.Models.QueryFormStructure import CollapseForm
 
+from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
+from matplotlib.figure import Figure
 
 ###from DemoFormProject.Models.LocalDatabaseRoutines import IsUserExist, IsLoginGood, AddNewUser 
 
 db_Functions = create_LocalDatabaseServiceRoutines() 
+app.config['SECRET_KEY'] = 'All You Need Is Love Ta ta ta ta ta'
 from flask_bootstrap import Bootstrap
 bootstrap = Bootstrap(app)
 
@@ -173,17 +178,16 @@ def Register():
 @app.route('/login', methods=['GET', 'POST'])
 def Login():
     form = LoginFormStructure(request.form)
-
+ 
     if (request.method == 'POST' and form.validate()):
         if (db_Functions.IsLoginGood(form.username.data, form.password.data)):
             flash('Login approved!')
-            #return redirect('<were to go if login is good!')
         else:
             flash('Error in - Username and/or password')
    
     return render_template(
-        'login.html', 
-        form=form, 
+        'login.html',
+        form=form,
         title='Login to data analysis',
         year=datetime.now().year,
         repository_name='Pandas',
