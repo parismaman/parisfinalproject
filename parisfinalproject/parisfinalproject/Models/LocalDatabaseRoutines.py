@@ -3,7 +3,7 @@ Used structures and classes
 """
 from os import path
 import json
-#import pandas as pd
+import pandas as pd
 
 def create_LocalDatabaseServiceRoutines():
     return LocalDatabaseServiceRoutines()

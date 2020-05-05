@@ -90,7 +90,6 @@ def Album():
         'PictureAlbum.html',
         title='Pictures',
         year=datetime.now().year,
-        message='Welcome to my picture album'
     )
 
 @app.route('/DataModel')
@@ -104,10 +103,6 @@ def DataModel():
         title='DataModel',
         year=datetime.now().year,
         message='My data page.',
-        img_trump = '',
-        img_obama = '',
-        img_bush = '',
-        img_clinton = ''
     )
 
 
@@ -166,7 +161,6 @@ def Register():
     return render_template(
         'register.html', 
         form=form, 
-        title='Register New User',
         year=datetime.now().year,
         repository_name='Pandas',
         )
@@ -188,7 +182,6 @@ def Login():
     return render_template(
         'login.html',
         form=form,
-        title='Login to data analysis',
         year=datetime.now().year,
         repository_name='Pandas',
         )
@@ -215,10 +208,6 @@ def NBA_salary():
     return render_template(
         'NBA_salary.html',
         year=datetime.now().year,
-        img_trump = '',
-        img_obama = '',
-        img_bush = '',
-        img_clinton = '',
         raw_data_table = raw_data_table,
         form1 = form1,
         form2 = form2
