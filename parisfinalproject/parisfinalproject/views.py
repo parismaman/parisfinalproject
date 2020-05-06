@@ -44,6 +44,18 @@ from parisfinalproject.Models.QueryFormStructure import CollapseForm
 from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
 from matplotlib.figure import Figure
 
+# -------------------------------------------------------
+#Get the choices list of the players in in order of the abc
+# -------------------------------------------------------
+def get_Players_choices():
+    df = pd.read_csv(path.join(path.join(__file__),"..\\static\\Data\\NBA_salary.csv" ))
+    l=df['Player'].tolist()
+    l.sort()
+    l=list(zip(l,l))
+    return l
+
+
+
 ###from DemoFormProject.Models.LocalDatabaseRoutines import IsUserExist, IsLoginGood, AddNewUser 
 
 db_Functions = create_LocalDatabaseServiceRoutines() 
@@ -51,6 +63,9 @@ app.config['SECRET_KEY'] = 'All You Need Is Love Ta ta ta ta ta'
 from flask_bootstrap import Bootstrap
 bootstrap = Bootstrap(app)
 
+# -------------------------------------------------------
+# Home page
+# -------------------------------------------------------
 
 @app.route('/')
 @app.route('/home')
@@ -62,6 +77,9 @@ def home():
         year=datetime.now().year,
     )
 
+# -------------------------------------------------------
+# contact page
+# -------------------------------------------------------
 @app.route('/contact')
 def contact():
     """Renders the contact page."""
@@ -71,6 +89,10 @@ def contact():
         year=datetime.now().year,
      
     )
+
+# -------------------------------------------------------
+# About page
+# -------------------------------------------------------
 
 @app.route('/about')
 def about():
@@ -82,6 +104,9 @@ def about():
     
     )
 
+# -------------------------------------------------------
+# photo album page
+# -------------------------------------------------------
 
 @app.route('/Album')
 def Album():
@@ -92,6 +117,9 @@ def Album():
         year=datetime.now().year,
     )
 
+# -------------------------------------------------------
+# data model page
+# -------------------------------------------------------
 @app.route('/DataModel')
 def DataModel():
 
@@ -105,36 +133,41 @@ def DataModel():
         message='My data page.',
     )
 
-
+# -------------------------------------------------------
+# data analysing of the datasets 
+# quary
+# -------------------------------------------------------
 @app.route('/Query', methods=['GET', 'POST'])
 def Query():
 
     Name = None
     Country = ''
-    capital = ''
-    df = pd.read_csv(path.join(path.dirname(__file__), 'static\\Data\\capitals.csv'))
-    df = df.set_index('Country')
+    parametes_choices = ''
 
     form = QueryFormStructure(request.form)
+    form.Players.choices = get_Players_choices() 
      
     if (request.method == 'POST' ):
-        name = form.name.data
-        Country = name
-        if (name in df.index):
-            capital = df.loc[name,'Capital']
-        else:
-            capital = name + ', no such country'
-        form.name.data = ''
+        print('hello')
 
-    df = pd.read_csv(path.join(path.dirname(__file__), 'static\\Data\\users.csv'))
+# creating the base to the graph
 
-    raw_data_table = df.to_html(classes = 'table table-hover')
+        df = df.set_index('Country')  
+        df = df[(form.measures_mselect.data)]
+        df = df.loc[(form.country_mselect.data)]
+
+# the graph as picture form
+
+        fig = plt.figure()
+        ax = fig.add_subplot(111)
+        df.plot(ax = ax , kind = 'barh', figsize=(15, 5))
+        chart = plot_to_img(fig)
+
+
 
     return render_template('Query.html', 
             form = form, 
-            name = capital, 
             Country = Country,
-            raw_data_table = raw_data_table,
             title='Query by the user',
             year=datetime.now().year,
             message='This page will use the web forms to get user input'
@@ -176,6 +209,7 @@ def Login():
     if (request.method == 'POST' and form.validate()):
         if (db_Functions.IsLoginGood(form.username.data, form.password.data)):
             flash('Login approved!')
+            return redirect('Query')
         else:
             flash('Error in - Username and/or password')
    
@@ -185,6 +219,10 @@ def Login():
         year=datetime.now().year,
         repository_name='Pandas',
         )
+
+# -------------------------------------------------------
+# database page
+# -------------------------------------------------------
 @app.route('/NBA_salary' , methods = ['GET' , 'POST'])
 def NBA_salary():
 
@@ -193,7 +231,6 @@ def NBA_salary():
     """Renders the about page."""
     form1 = ExpandForm()
     form2 = CollapseForm()
-    # df = pd.read_csv(path.join(path.dirname(__file__), 'static\\data\\trump.csv'))
     df = pd.read_csv(path.join(path.dirname(__file__), 'static/Data/NBA_salary.csv'))
     raw_data_table = ''
 
