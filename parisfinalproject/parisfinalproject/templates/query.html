@@ -3,13 +3,22 @@
 
 {% block content %}
 
-<h2>Data Query Page</h2>
-<h7>
-    This is the data query page. On this page you can view the data visually by dates and countries.
-    The epidemic start date presented by the database is August 2014 and the end of the data is March 2016.
-    To make the best conclusions, I suggest choosing the countries: Sierra Leone and Guinea
-    Most countries contain almost no deaths.
-</h7>
+    <div class="largetron" style="background-color: lightpink">
+
+
+        <div class="d-flex flex-row-reverse bg-secondary">
+            <h1 style="font-family: David"> Data Query</h1>
+        </div>
+    </div>
+
+    <h7 style="font-family: David">
+        This is the data query page. On this page you can view the data visually by Players and their salary against their other players.
+        You can also see if the salary is actually rewarding by comparing between multiple players and the money the get for a mintute playing,
+        the number of games they played in that season and the amout of time they actually played in that season (in minutes).
+        To make the best conclusions, I suggest choosing the players: Lebron Jmes, witch you probobly know and 	Tyler Lydon, witch you probobly didn't
+        hear about and see why, plus to see the differences
+        between the salaries
+    </h7>
 <form method=post>
     {{ form.csrf }}
     <table>
