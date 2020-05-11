@@ -45,7 +45,7 @@ from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
 from matplotlib.figure import Figure
 
 # -------------------------------------------------------
-#Get the choices list of the players in in order of the abc
+# Get the choices list of the players in in order of the abc
 # -------------------------------------------------------
 def get_Players_choices():
     df = pd.read_csv(path.join(path.join(__file__),"..\\static\\Data\\NBA_salary.csv" ))
@@ -133,6 +133,40 @@ def DataModel():
         message='My data page.',
     )
 
+
+# -------------------------------------------------------
+# database page
+# -------------------------------------------------------
+@app.route('/NBA_salary' , methods = ['GET' , 'POST'])
+def NBA_salary():
+
+    print("NBA_salary")
+
+    """Renders the about page."""
+    form1 = ExpandForm()
+    form2 = CollapseForm()
+    df = pd.read_csv(path.join(path.dirname(__file__), 'static/Data/NBA_salary.csv'))
+    df=df[['Player','Salary','NBA_Country','Age', 'Tm','G','MP', 'TS%']]
+    raw_data_table = ''
+
+    if request.method == 'POST':
+        if request.form['action'] == 'Expand' and form1.validate_on_submit():
+            raw_data_table = df.to_html(classes = 'table table-hover')
+        if request.form['action'] == 'Collapse' and form2.validate_on_submit():
+            raw_data_table = ''
+
+    
+
+    return render_template(
+        'NBA_salary.html',
+        year=datetime.now().year,
+        raw_data_table = raw_data_table,
+        form1 = form1,
+        form2 = form2
+    )
+
+
+
 # -------------------------------------------------------
 # data analysing of the datasets 
 # quary
@@ -140,37 +174,38 @@ def DataModel():
 @app.route('/Query', methods=['GET', 'POST'])
 def Query():
 
-    Name = None
-    Country = ''
-    parametes_choices = ''
+    chart= ''
+
 
     form = QueryFormStructure(request.form)
     form.Players.choices = get_Players_choices() 
      
     if (request.method == 'POST' ):
-        print('hello')
-
-# creating the base to the graph
-
-        df = df.set_index('Country')  
-        df = df[(form.measures_mselect.data)]
-        df = df.loc[(form.country_mselect.data)]
-
-# the graph as picture form
-
+        category = form.Parameters.data
+        player_names = form.Players.data
+        df = pd.read_csv(path.join(path.join(__file__),"..\\static\\Data\\NBA_salary.csv" ))
+        df=df[['Player','Salary','G','MP']]
+        df=df[['Player','Salary',category]]
+        df=df.dropna()
+        df['Salary']= df['Salary'].astype(int)
+        df[category]= df[category].astype(int)
+        df['DollarPer']= df['Salary']/df[category]
+        df=df.drop('Salary',1)
+        df=df.drop(category,1)
+        df=df.set_index('Player')
+        df=df[df.index.isin(player_names)]
         fig = plt.figure()
         ax = fig.add_subplot(111)
-        df.plot(ax = ax , kind = 'barh', figsize=(15, 5))
+        df.plot(ax = ax , kind = 'barh', figsize=(15, 5), color='y', fontsize= 20)
         chart = plot_to_img(fig)
 
 
 
     return render_template('Query.html', 
             form = form, 
-            Country = Country,
-            title='Query by the user',
             year=datetime.now().year,
-            message='This page will use the web forms to get user input'
+            message='This page will use the web forms to get user input',
+            chart = chart
         )
 
 # -------------------------------------------------------
@@ -220,33 +255,13 @@ def Login():
         repository_name='Pandas',
         )
 
-# -------------------------------------------------------
-# database page
-# -------------------------------------------------------
-@app.route('/NBA_salary' , methods = ['GET' , 'POST'])
-def NBA_salary():
 
-    print("NBA_salary")
 
-    """Renders the about page."""
-    form1 = ExpandForm()
-    form2 = CollapseForm()
-    df = pd.read_csv(path.join(path.dirname(__file__), 'static/Data/NBA_salary.csv'))
-    raw_data_table = ''
+def plot_to_img(fig):
+    pngImage = io.BytesIO()
+    FigureCanvas(fig).print_png(pngImage)
+    pngImageB64String = "data:image/png;base64,"
+    pngImageB64String += base64.b64encode(pngImage.getvalue()).decode('utf8')
+    return pngImageB64String
 
-    if request.method == 'POST':
-        if request.form['action'] == 'Expand' and form1.validate_on_submit():
-            raw_data_table = df.to_html(classes = 'table table-hover')
-        if request.form['action'] == 'Collapse' and form2.validate_on_submit():
-            raw_data_table = ''
-
-    
-
-    return render_template(
-        'NBA_salary.html',
-        year=datetime.now().year,
-        raw_data_table = raw_data_table,
-        form1 = form1,
-        form2 = form2
-    )
 
