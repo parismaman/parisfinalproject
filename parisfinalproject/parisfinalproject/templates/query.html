@@ -3,22 +3,27 @@
 
 {% block content %}
 
-    <div class="largetron" style="background-color: lightpink">
+<div class="largetron" style="background-color: lightpink">
 
 
-        <div class="d-flex flex-row-reverse bg-secondary">
-            <h1 style="font-family: David"> Data Query</h1>
-        </div>
+    <div class="d-flex flex-row-reverse bg-secondary">
+        <h1 style="font-family: David"> Data Query</h1>
     </div>
+</div>
 
-    <h7 style="font-family: David">
-        This is the data query page. On this page you can view the data visually by Players and their salary against their other players.
-        You can also see if the salary is actually rewarding by comparing between multiple players and the money the get for a mintute playing,
-        the number of games they played in that season and the amout of time they actually played in that season (in minutes).
-        To make the best conclusions, I suggest choosing the players: Lebron Jmes, witch you probobly know and 	Tyler Lydon, witch you probobly didn't
-        ;hear about and see why, plus to see the differences
-        between the salaries
-    </h7>
+
+<h4 style="font-family: David">
+    This is the data query page. On this page you can view the data visually by Players and their salary against other players.
+    You can also see if the salary is actually rewarding the player by comparing between multiple players with
+    the money the get for an average mintute playing when they actually play in,
+    or the money they they get for a single game in the season where they take part at, in average.
+    To make the best conclusions, I suggest comparing between a famous player witch we all know, for example, Lebron James or Kyrie
+    Irving, between a player you've never heard about to make the best conclusions easily and on your own.
+    <br> <b> REMEMBER: </b> "G" means games, and "MP" means minutes played.
+</h4>
+
+
+
 <form method=post>
     {{ form.csrf }}
     <table>
@@ -31,7 +36,7 @@
             <td>                    {{ form.Parameters }}       </td>
         </tr>
         <tr>
-            <td class="input submit"> <input type="submit" value="Search"> </td>
+            <td class="input submit"> <input type="submit" value="LET'S FIND OUT!"> </td>
         </tr>
     </table>
 </form>
@@ -39,10 +44,30 @@
 
 <div class="row">
     <div class="col-md-8">
-        <img src={{ chart }} class="img-thumbnail" alt="not found" height={{height}} width={{ width }}>
+        <img src={{ chart }} class="img-thumbnail" alt="" height={{height}} width={{ width }}>
     </div>
 </div>
 
+<td>
+    <img src="https://images1.calcalist.co.il/PicServer3/2017/12/04/776381/Reuters_2017-10-29T024200Z_201798683_NOCID_RTRMADP_3_NBA-B518288_l.jpg" width="200" height="200">
+
+</td>
+<td>
+    <img src="https://i.ytimg.com/vi/QhSOVD74oRI/maxresdefault.jpg" width="250" height="200">
+
+</td>
+<td>
+    <img src="https://pbs.twimg.com/profile_images/998673198169317377/wCfs0Sxa_400x400.jpg" width="150" height="200">
+
+</td>
+<td>
+    <img src="https://a.espncdn.com/combiner/i?img=/photo/2020/0509/nba_74_players_1_16x9.jpg" width="250" height="200">
+
+</td>
+<td>
+    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQV0AAQUkpSZQ-ZJjJctWnyzyi3RXlUoct4hMcMrO9r9-4IqYlS&usqp=CAU" width="250" height="200">
+
+</td>
 
 
 

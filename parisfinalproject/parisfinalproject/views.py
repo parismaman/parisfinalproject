@@ -169,7 +169,7 @@ def NBA_salary():
 
 # -------------------------------------------------------
 # data analysing of the datasets 
-# quary
+# quary page
 # -------------------------------------------------------
 @app.route('/Query', methods=['GET', 'POST'])
 def Query():
@@ -196,7 +196,7 @@ def Query():
         df=df[df.index.isin(player_names)]
         fig = plt.figure()
         ax = fig.add_subplot(111)
-        df.plot(ax = ax , kind = 'barh', figsize=(15, 5), color='y', fontsize= 20)
+        df.plot(ax = ax , kind = 'barh', figsize=(15, 5), color='pink', fontsize= 20)
         chart = plot_to_img(fig)
 
 
@@ -255,7 +255,9 @@ def Login():
         repository_name='Pandas',
         )
 
-
+# -------------------------------------------------------
+# Turns the graph into a picture
+# -------------------------------------------------------
 
 def plot_to_img(fig):
     pngImage = io.BytesIO()
