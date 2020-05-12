@@ -30,9 +30,6 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="parisfinalproject\Models\LocalDatabaseRoutines.py" />
-    <Compile Include="parisfinalproject\Models\FormStructure.py">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="parisfinalproject\Models\QueryFormStructure.py" />
     <Compile Include="parisfinalproject\views.py" />
     <Compile Include="runserver.py" />

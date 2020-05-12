@@ -27,13 +27,15 @@ import base64
 
 from os import path
 
+# -------------------------------------------------------
+# import from the environment and from requirment.txt
+# -------------------------------------------------------
+
 from flask   import Flask, render_template, flash, request
 from wtforms import Form, BooleanField, StringField, PasswordField, validators
 from wtforms import TextField, TextAreaField, SubmitField, SelectField, DateField
+# allows the user to select multiple feilds or one, and to move to other page from the datamodel page
 from wtforms import ValidationError
-
-from parisfinalproject.Models.QueryFormStructure import UserRegistrationFormStructure
-from parisfinalproject.Models.QueryFormStructure import LoginFormStructure
 
 from parisfinalproject.Models.QueryFormStructure import QueryFormStructure 
 from parisfinalproject.Models.QueryFormStructure import LoginFormStructure 
