@@ -28,7 +28,6 @@
     {% with messages = get_flashed_messages(with_categories=true) %}
     {% if messages %}
     {% for message in messages %}
-    <h4 style="color:red">{{ message[1] }}</h4>
     {% endfor %}
     {% endif %}
     {% endwith %}

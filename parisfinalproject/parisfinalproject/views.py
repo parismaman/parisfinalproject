@@ -2,6 +2,9 @@
 Routes and views for the flask application.
 """
 
+##-----Imports-----##
+##--imports all the ibraries for the views.py--#
+
 from datetime import datetime
 from flask import render_template
 from parisfinalproject import app
@@ -27,9 +30,6 @@ import base64
 
 from os import path
 
-# -------------------------------------------------------
-# import from the environment and from requirment.txt
-# -------------------------------------------------------
 
 from flask   import Flask, render_template, flash, request
 from wtforms import Form, BooleanField, StringField, PasswordField, validators
@@ -45,16 +45,21 @@ from parisfinalproject.Models.QueryFormStructure import CollapseForm
 
 from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
 from matplotlib.figure import Figure
+### ----------------------------------------------------------- ###
 
-# -------------------------------------------------------
+# -------------------------------------------------------##
 # Get the choices list of the players in in order of the abc
-# -------------------------------------------------------
 def get_Players_choices():
     df = pd.read_csv(path.join(path.join(__file__),"..\\static\\Data\\NBA_salary.csv" ))
+    ## קורא את קובץ ה-csv
     l=df['Player'].tolist()
+    ## מאפשרת למשתמש לבחור שחקנים מן הרשימה בקטגוריה
     l.sort()
+    ## ממיינת את הרשימה לפי סדר a-z
     l=list(zip(l,l))
     return l
+## מחזירה את רשימת השחקנים עם אפשרות לבחירת שחקנים ללא הגבלה של המשתמש
+# -------------------------------------------------------##
 
 
 
@@ -62,8 +67,10 @@ def get_Players_choices():
 
 db_Functions = create_LocalDatabaseServiceRoutines() 
 app.config['SECRET_KEY'] = 'All You Need Is Love Ta ta ta ta ta'
+## secret key- נועד להגן על פרטי המשתמש: שם, סיסמה לאתר, טלפון, מייל וכו'
 from flask_bootstrap import Bootstrap
 bootstrap = Bootstrap(app)
+## מייבא מאפליקציית bootst
 
 # -------------------------------------------------------
 # Home page
@@ -147,15 +154,20 @@ def NBA_salary():
     """Renders the about page."""
     form1 = ExpandForm()
     form2 = CollapseForm()
+    ##ייבוא מעמוד ה- QueryFormStructure
     df = pd.read_csv(path.join(path.dirname(__file__), 'static/Data/NBA_salary.csv'))
+    ## קורא את קובץ ה-csv
     df=df[['Player','Salary','NBA_Country','Age', 'Tm','G','MP', 'TS%']]
+    ## מוריד מהטבלה את כל העמודות מקובץ הדאטא המקורי שלא רלוונטיות לי ומשאיר רק את הרלוונטיות
     raw_data_table = ''
 
     if request.method == 'POST':
         if request.form['action'] == 'Expand' and form1.validate_on_submit():
             raw_data_table = df.to_html(classes = 'table table-hover')
+     ## הפעולה תפתח את הטבלה המלאה, כשיבקש המשתמש באמצעות לחיצת כפתור
         if request.form['action'] == 'Collapse' and form2.validate_on_submit():
             raw_data_table = ''
+     ## הפעולה תסגור את הטבלה מתצוגה, כשיבקש המשתמש באמצעות לחיצת כפתור
 
     
 
@@ -184,22 +196,36 @@ def Query():
      
     if (request.method == 'POST' ):
         category = form.Parameters.data
+        ## יוצר משתנה חדש
         player_names = form.Players.data
+        ## יוצר משתנה חדש
         df = pd.read_csv(path.join(path.join(__file__),"..\\static\\Data\\NBA_salary.csv" ))
         df=df[['Player','Salary','G','MP']]
+        ## מגדיר טבלה חדשה בה נמצאים רק הפרמטרים הרלוונטים לי
         df=df[['Player','Salary',category]]
+        ## מגדיר מחדש את הטבלהת רק שבמקום שמות הקטגוריות יצרתי משתנה שכולל את שניהם שבהמשך יהפוך לקטגוריה dollarper ויבצע את הפעולה המבוקשת לקווארי שלי
         df=df.dropna()
+        ## מוריד את כל השחקנים שיש להם בטבלה שדות ריקים
         df['Salary']= df['Salary'].astype(int)
+        ## הופך את הסטרינג לאינדקס על מנת שיהיה ניתן לחלק את הקטגוריה וליצור מספר מממוצע חדש
         df[category]= df[category].astype(int)
+         ## הופך את הסטרינג לאינדקס על מנת שיהיה ניתן לחלק את הקטגוריה וליצור מספר מממוצע חדש
         df['DollarPer']= df['Salary']/df[category]
+        ## יוצר קטגוריה חדשה בשם dollarper. היא מועדת לחשב מצוצע עם קטגוריות שאיתם ירצה המשתמש להשוות. לדוגמא, 
+        ## אם ירצה המשתמש להשוות בעזרת הפרמטר כמות משחקים אז הפעולה שיצרתי תחלק את המשכורת הכוללת של אוותו שחקן בכמות המשחקים ששיחק בעונה
+        ##    ) דולר פר משחק) ובכך תציג כמה מרוויח השחקן בממוצע בכל משחק
         df=df.drop('Salary',1)
+        ## מוריד את הקטגוריה מאחר ויצרנו אחת חדשה בשם dollarper שמבוססת על הקטגוריות המשכורת
         df=df.drop(category,1)
+        ## מוריד את הקטגוריה מאחר ויצרנו אחת חדשה בשם dollarper שמבוססת על הקטגוריות ועל המשכורת
         df=df.set_index('Player')
         df=df[df.index.isin(player_names)]
+        ## בודקת אם ערכי שחקנים אלו נמצאים ברשימה
         fig = plt.figure()
         ax = fig.add_subplot(111)
         df.plot(ax = ax , kind = 'barh', figsize=(15, 5), color='pink', fontsize= 20)
         chart = plot_to_img(fig)
+        ## עיצוב הגרף, עצב, גודל טקס, צורה.. + הופך את הגרף לתמונה
 
 
 
@@ -223,9 +249,10 @@ def Register():
             db_table = ""
 
             flash('Thanks for registering new user - '+ form.FirstName.data + " " + form.LastName.data )
-            # Here you should put what to do (or were to go) if registration was good
+            # אם הרשימה ממולאת כמו שצריך, האתר יציג הודעה "תודה שנרשמת"
         else:
             flash('Error: User with this Username already exist ! - '+ form.username.data)
+            # אם אחד הפרטים שהזין המשתמש כבר קיים במערכת, האתר יציג הודעה בה רשום: "שגיאה: שם משתמש זה כבר קיים במערכת"
             form = UserRegistrationFormStructure(request.form)
 
     return render_template(
@@ -249,7 +276,8 @@ def Login():
             return redirect('Query')
         else:
             flash('Error in - Username and/or password')
-   
+   ## אם שם המשתמש והסיסמה שהכניס המשתמש תואמים ונכונים, האתר יאשר זאת ויעביר אותו ישירות לעמוד ה-query
+   ## אם לא, האתר יחזיר הודעת שגיאה בה כתוב שם משתמש/ סיסמה אינם נכונים
     return render_template(
         'login.html',
         form=form,
