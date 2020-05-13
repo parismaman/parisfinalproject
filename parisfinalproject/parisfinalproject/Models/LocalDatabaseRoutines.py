@@ -1,8 +1,9 @@
 """
 Used structures and classes
 """
-##-----Imports-----##
+##---------------------------Imports-----------------------------##
 ##--imports all the ibraries---##
+### ----------------------------------------------------------- ###
 
 from os import path
 import json
@@ -17,23 +18,26 @@ class LocalDatabaseServiceRoutines(object):
         self.index = {}
         self.UsersDataFile = path.join(path.dirname(__file__), '..\\static\\Data\\users.csv')
 
-   # -------------------ReadCSVUsers------------------------------------#
+# -------------------ReadCSVUsers------------------------------------#
         # Read users data into a dataframe #
-        # -------------------------------------------------------#
+# -------------------------------------------------------------------#
+
     def ReadCSVUsersDB(self):
         df = pd.read_csv(self.UsersDataFile)
         return df
 
-     # ------------------WriteCSVToFile-------------------------------------#
-        # Saves the DataFrame (input parameter) into the users csv #
-        # -------------------------------------------------------#
+# ------------------WriteCSVToFile-------------------------#
+# Saves the DataFrame (input parameter) into the users csv #
+# ---------------------------------------------------------#
+
     def WriteCSVToFile_users(self, df):
         df.to_csv(self.UsersDataFile, index=False)
 
 
-        # --------------------IsUserExist-----------------------------------#
-        # Check if username is already exist in the data file
-        # -------------------------------------------------------#
+# --------------------IsUserExist-----------------------------------#
+#        Check if username is already exist in the data file        #
+# ------------------------------------------------------------------#
+
     def IsUserExist(self, UserName):
         # Load the database of users
         df = self.ReadCSVUsersDB()
@@ -41,9 +45,10 @@ class LocalDatabaseServiceRoutines(object):
         return (UserName in df.index.values)
 
 
-   # --------------------------IsLoginGood-----------------------------#
-    #-- chek if the UserName/Password are correct(exist in users.csv) and return boolean --#
-    # -------------------------------------------------------#
+# ---------------------------------------IsLoginGood-----------------------------------#
+#-- chek if the UserName/Password are correct(exist in users.csv) and return boolean --#
+# -------------------------------------------------------------------------------------#
+
     def IsLoginGood(self, UserName, Password):
         # Load the database of users
         df = self.ReadCSVUsersDB()
@@ -56,7 +61,8 @@ class LocalDatabaseServiceRoutines(object):
      
 # -------------------AddNewUser--------------------------#
 # Add a new user to the DB
-# -------------------------------------------------------
+# -------------------------------------------------------#
+
     def AddNewUser(self, User):
         # Load the database of users
         df = self.ReadCSVUsersDB()
